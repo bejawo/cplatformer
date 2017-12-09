@@ -24,6 +24,7 @@
 #include "Mouse.h"
 #include "Graphics.h"
 #include "Grid.h"
+#include "Level.h"
 
 class Game
 {
@@ -45,4 +46,5 @@ private:
 	/*  User Variables              */
 	/********************************/
 	Grid grid;
+	Level level;
 };

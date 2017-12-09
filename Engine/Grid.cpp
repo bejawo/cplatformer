@@ -8,5 +8,5 @@ Grid::Grid(Graphics& gfx)
 
 void Grid::DrawCell(int x, int y, Color c)
 {
-	gfx.DrawRect(x, y, dimension, dimension, c);
+	gfx.DrawRect(x * dimension, y * dimension, dimension, dimension, c);
 }

@@ -25,7 +25,8 @@ Game::Game( MainWindow& wnd )
 	:
 	wnd( wnd ),
 	gfx( wnd ),
-	grid(gfx)
+	grid(gfx),
+	level(level)
 {
 }
 
@@ -43,4 +44,5 @@ void Game::UpdateModel()
 
 void Game::ComposeFrame()
 {
+	level.drawLevel(grid);
 }
