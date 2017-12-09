@@ -21,12 +21,12 @@
 #include "MainWindow.h"
 #include "Game.h"
 
-Game::Game( MainWindow& wnd )
+Game::Game(MainWindow& wnd)
 	:
-	wnd( wnd ),
-	gfx( wnd ),
+	wnd(wnd),
+	gfx(wnd),
 	grid(gfx),
-	level(level)
+	level(grid)
 {
 }
 
