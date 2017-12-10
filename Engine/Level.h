@@ -10,7 +10,6 @@ class Level
 public:
 	Level(Grid& grid);
 	void drawLevel(Grid& grid);
-	char getCharAtIndex(int index);
 	std::string getStringFromText(std::ifstream& file);
 	int getXPosFromIndex(int index);
 	int getYPosFromIndex(int index);

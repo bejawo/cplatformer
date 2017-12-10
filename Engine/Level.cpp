@@ -17,15 +17,24 @@ void Level::drawLevel(Grid & grid)
 		curChar = levelString.at(i);
 		int x = getXPosFromIndex(i);
 		int y = getYPosFromIndex(i);
-		if (curChar == '1')
+
+		switch (curChar)
+		{
+		case '0':
+			grid.DrawCell(x, y, Colors::Gray);
+			break;
+		case '1':
 			grid.DrawCell(x, y, Colors::Red);
+			break;
+		case 'S':
+			grid.DrawCell(x, y, Colors::Blue);
+			break;
+		case 'F':
+			grid.DrawCell(x, y, Colors::Green);
+			break;
+		}
+			
 	}
-}
-
-char Level::getCharAtIndex(int index)
-{
-
-	return 0;
 }
 
 std::string Level::getStringFromText(std::ifstream& file)
