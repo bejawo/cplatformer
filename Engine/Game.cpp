@@ -41,6 +41,7 @@ void Game::Go()
 
 void Game::UpdateModel()
 {
+	tibby.Update(wnd.kbd);
 }
 
 void Game::ComposeFrame()
