@@ -15,6 +15,7 @@ Player::Player(Graphics& gfx, Level& level)
 	int y = level.getYPosFromIndex(startIndex);
 	pos.x = float(x * Grid::dimension);
 	pos.y = float(y * Grid::dimension);
+	updateGridPos();
 }
 
 Vec2 Player::getPosFromLevelIndex(int index, int gridWidth, int gridHeight)
@@ -54,6 +55,12 @@ void Player::Update(Keyboard& kbd)
 	}
 	else
 	{
+		vel.y = 0.0f;
+	}
+
+	if (isColliding())
+	{
+		vel.x = 0.0f;
 		vel.y = 0.0f;
 	}
 
