@@ -25,6 +25,8 @@
 #include "Graphics.h"
 #include "Grid.h"
 #include "Level.h"
+#include "Vec2.h"
+#include "Player.h"
 
 class Game
 {
@@ -47,4 +49,5 @@ private:
 	/********************************/
 	Grid grid;
 	Level level;
+	Player tibby;
 };

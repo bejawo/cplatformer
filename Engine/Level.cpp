@@ -6,12 +6,13 @@ Level::Level(Grid& grid)
 {
 	levelFile.open("level.txt");
 	levelString = getStringFromText(levelFile);
+	startIndex = findStartIndex();
 }
 
 void Level::drawLevel(Grid & grid)
 {
 	char curChar;
-	int length = levelString.length();
+	int length = (int)levelString.length();
 	for (int i = 0; i < length; i++)
 	{
 		curChar = levelString.at(i);
@@ -33,8 +34,17 @@ void Level::drawLevel(Grid & grid)
 			grid.DrawCell(x, y, Colors::Green);
 			break;
 		}
-			
 	}
+}
+
+int Level::findStartIndex()
+{
+	for (int i = 0; i < numCells; i++)
+	{
+		if (levelString.at(i) == 'S')
+			return i;
+	}
+	return -1;
 }
 
 std::string Level::getStringFromText(std::ifstream& file)
@@ -54,4 +64,14 @@ int Level::getXPosFromIndex(int index)
 int Level::getYPosFromIndex(int index)
 {
 	return index / dimHeight;
+}
+
+std::string & Level::getLevelString()
+{
+	return levelString;
+}
+
+int Level::getStartIndex()
+{
+	return startIndex;
 }

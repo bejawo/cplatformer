@@ -26,7 +26,8 @@ Game::Game(MainWindow& wnd)
 	wnd(wnd),
 	gfx(wnd),
 	grid(gfx),
-	level(grid)
+	level(grid),
+	tibby(gfx, level)
 {
 }
 
@@ -45,4 +46,5 @@ void Game::UpdateModel()
 void Game::ComposeFrame()
 {
 	level.drawLevel(grid);
+	tibby.drawPlayer();
 }
