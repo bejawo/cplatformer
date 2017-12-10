@@ -11,8 +11,9 @@ void Grid::DrawCell(int x, int y, Color c)
 	gfx.DrawRect(x * dimension, y * dimension, dimension, dimension, c);
 }
 
-int Grid::findCellPixelPos(int x, int y)
+Grid::Tile Grid::findTileFromPixel(int x, int y)
 {
-
-	return 0;
+	int tileX = x / dimension;
+	int tileY = y / dimension;
+	return {tileX, tileY};
 }

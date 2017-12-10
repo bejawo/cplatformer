@@ -2,7 +2,8 @@
 
 Player::Player(Graphics& gfx, Level& level)
 	:
-	gfx(gfx)
+	gfx(gfx),
+	level(level)
 {
 	vel.x = 0.0f;
 	vel.y = 0.0f;
@@ -42,5 +43,62 @@ void Player::Update(Keyboard& kbd)
 	{
 		vel.x = 0.0f;
 	}
+
+	if (kbd.KeyIsPressed(VK_UP))
+	{
+		vel.y = -3.0f;
+	}
+	else if (kbd.KeyIsPressed(VK_DOWN))
+	{
+		vel.y = 3.0f;
+	}
+	else
+	{
+		vel.y = 0.0f;
+	}
+
 	pos = pos + vel;
+
+	updateGridPos();
+}
+
+void Player::updateGridPos()
+{
+	top = (int) pos.y / Grid::dimension;
+	bottom = (int) (pos.y + height) / Grid::dimension;
+	left = (int) pos.x / Grid::dimension;
+	right = (int) (pos.x + width) / Grid::dimension;
+}
+
+bool Player::isColliding()
+{
+	Grid::Tile curTile;
+	for (int j = top; j <= bottom; j++)
+	{
+		for (int i = left; i <= right; i++)
+		{
+			curTile.x = i;
+			curTile.y = j;
+			int index = level.getIndexFromTile(curTile);
+			char curChar = level.findCharAtIndex(index);
+			if (curChar == '1')
+				return true;
+		}
+	}
+	return false;
+}
+
+Vec2 Player::getPos()
+{
+	return pos;
+}
+
+int Player::getWidth()
+{
+	return width;
+}
+
+int Player::getHeight()
+{
+	return height;
 }

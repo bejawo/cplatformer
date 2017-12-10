@@ -6,9 +6,15 @@
 class Grid
 {
 public:
+	struct Tile
+	{
+		int x;
+		int y;
+	};
+public:
 	Grid(Graphics& gfx);
 	void DrawCell(int x, int y, Color c);
-	int findCellPixelPos(int x, int y);
+	Tile findTileFromPixel(int x, int y);
 
 private:
 	static constexpr int width = 20;

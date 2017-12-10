@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <assert.h>
 #include "Grid.h"
+#include "Vec2.h"
 
 class Level
 {
@@ -15,9 +16,11 @@ public:
 	std::string getStringFromText(std::ifstream& file);
 	int getXPosFromIndex(int index);
 	int getYPosFromIndex(int index);
-	std::string& getLevelString();
+	int getIndexFromTile(Grid::Tile);
+	char findCharAtIndex(int index);
 
 	int getStartIndex();
+	std::string getLevelString();
 private:
 	static constexpr int dimWidth = 8;
 	static constexpr int dimHeight = 8;

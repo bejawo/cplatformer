@@ -66,12 +66,22 @@ int Level::getYPosFromIndex(int index)
 	return index / dimHeight;
 }
 
-std::string & Level::getLevelString()
+int Level::getIndexFromTile(Grid::Tile tile)
 {
-	return levelString;
+	return tile.y * dimWidth + tile.x;
+}
+
+char Level::findCharAtIndex(int index)
+{
+	return (char) levelString.at(index);
 }
 
 int Level::getStartIndex()
 {
 	return startIndex;
+}
+
+std::string Level::getLevelString()
+{
+	return levelString;
 }
