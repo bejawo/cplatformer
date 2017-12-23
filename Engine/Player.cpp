@@ -46,12 +46,12 @@ void Player::Update(Keyboard& kbd)
 
 	if (kbd.KeyIsPressed(VK_UP))
 	{
-		// TODO: jump
+		if (!isJumping)
+		{
+			isJumping = true;
+			vel.y += -12.0f;
+		}
 	}
-	
-	vel.y = 0.0f;
-
-	vel.y = vel.y + gravity;
 
 	// x movement
 	pos.x += vel.x;
@@ -60,6 +60,7 @@ void Player::Update(Keyboard& kbd)
 	updateGridPosX();
 
 	// y movement
+	vel.y += gravity;
 	pos.y += vel.y;
 	updateGridPosY();
 	handleCollisionsY();
@@ -88,6 +89,7 @@ void Player::handleCollisionsX()
 		if (curChar == '1')
 		{
 			pos.x -= vel.x;
+			vel.x = 0.0f;
 			return;
 		}
 	}
@@ -99,6 +101,7 @@ void Player::handleCollisionsX()
 		if (curChar == '1')
 		{
 			pos.x -= vel.x;
+			vel.x = 0.0f;
 			return;
 		}
 	}
@@ -115,6 +118,7 @@ void Player::handleCollisionsY()
 		if (curChar == '1')
 		{
 			pos.y -= vel.y;
+			vel.y = 0.0f;
 			return;
 		}
 	}
@@ -126,6 +130,8 @@ void Player::handleCollisionsY()
 		if (curChar == '1')
 		{
 			pos.y -= vel.y;
+			vel.y = 0.0f;
+			isJumping = false;
 			return;
 		}
 	}
