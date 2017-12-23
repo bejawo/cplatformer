@@ -51,7 +51,7 @@ void Player::Update(Keyboard& kbd)
 
 	if (kbd.KeyIsPressed(VK_UP))
 	{
-		if (!isJumping)
+		if (!isJumping && vel.y == 0) // Prevent jumping while falling (will need to change to enable jumping off a moving platform for example)
 		{
 			isJumping = true;
 			vel.y -= 12.0f;
