@@ -13,11 +13,13 @@ public:
 	Player(Graphics& gfx, Level& level);
 	Vec2 getPosFromLevelIndex(int index, int gridWidth, int gridHeight);
 	void drawPlayer();
+	void ResetPosition();
 	void Update(Keyboard& kbd);
 	void updateGridPosX();
 	void updateGridPosY();
 	void handleCollisionsX();
 	void handleCollisionsY();
+	void clampToGrid();
 
 	Vec2 getPos();
 	int getWidth();

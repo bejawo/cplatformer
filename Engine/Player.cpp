@@ -8,13 +8,7 @@ Player::Player(Graphics& gfx, Level& level)
 	vel.x = 0.0f;
 	vel.y = 0.0f;
 	
-	int startIndex = level.getStartIndex(); // find start index in levelString
-	Grid::Tile startTile = level.getTileFromIndex(startIndex); // convert index to tile position
-	// position player in start tile
-	pos.x = float(startTile.x * Grid::dimension);
-	pos.y = float(startTile.y * Grid::dimension);
-	updateGridPosX();
-	updateGridPosY();
+	ResetPosition();
 }
 
 Vec2 Player::getPosFromLevelIndex(int index, int gridWidth, int gridHeight)
@@ -27,6 +21,17 @@ Vec2 Player::getPosFromLevelIndex(int index, int gridWidth, int gridHeight)
 void Player::drawPlayer()
 {
 	gfx.DrawRect((int)pos.x, (int)pos.y, width, height, color);
+}
+
+void Player::ResetPosition()
+{
+	int startIndex = level.getStartIndex(); // find start index in levelString
+	Grid::Tile startTile = level.getTileFromIndex(startIndex); // convert index to tile position
+	// position player in start tile
+	pos.x = float(startTile.x * Grid::dimension);
+	pos.y = float(startTile.y * Grid::dimension);
+	updateGridPosX();
+	updateGridPosY();
 }
 
 void Player::Update(Keyboard& kbd)
@@ -49,8 +54,13 @@ void Player::Update(Keyboard& kbd)
 		if (!isJumping)
 		{
 			isJumping = true;
-			vel.y += -12.0f;
+			vel.y -= 12.0f;
 		}
+	}
+
+	if (kbd.KeyIsPressed(82)) // R (ascii decimal value)
+	{
+		ResetPosition();
 	}
 
 	// x movement
@@ -65,6 +75,8 @@ void Player::Update(Keyboard& kbd)
 	updateGridPosY();
 	handleCollisionsY();
 	updateGridPosY();
+
+	clampToGrid();
 }
 
 void Player::updateGridPosX()
@@ -136,6 +148,21 @@ void Player::handleCollisionsY()
 		}
 	}
 	return;
+}
+
+void Player::clampToGrid()
+{
+	if (pos.x < 0 || pos.x + width > Level::width)
+	{
+		pos.x -= vel.x;
+		vel.x = 0.0f;
+	}
+	if (pos.y < 0 || pos.y + height > Level::height - 15) // TODO: check collision detection - checking cells too far down? (shouldn't need to offset height here)
+	{
+		pos.y -= vel.y;
+		vel.y = 0.0f;
+		isJumping = false;
+	}
 }
 
 Vec2 Player::getPos()

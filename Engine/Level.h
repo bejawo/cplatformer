@@ -28,4 +28,7 @@ private:
 	std::ifstream levelFile;
 	int startIndex;
 	Grid& grid;
+public:
+	static constexpr int width = dimWidth * Grid::dimension;
+	static constexpr int height = dimHeight * Grid::dimension;
 };
