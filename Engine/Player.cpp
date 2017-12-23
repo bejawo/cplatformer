@@ -46,25 +46,21 @@ void Player::Update(Keyboard& kbd)
 
 	if (kbd.KeyIsPressed(VK_UP))
 	{
-		vel.y = -speed;
+		// TODO: jump
 	}
-	else if (kbd.KeyIsPressed(VK_DOWN))
-	{
-		vel.y = speed;
-	}
-	else
-	{
-		vel.y = 0.0f;
-	}
+	
+	vel.y = 0.0f;
+
+	vel.y = vel.y + gravity;
 
 	// x movement
-	pos.x = pos.x + vel.x;
+	pos.x += vel.x;
 	updateGridPosX();
 	handleCollisionsX();
 	updateGridPosX();
 
 	// y movement
-	pos.y = pos.y + vel.y;
+	pos.y += vel.y;
 	updateGridPosY();
 	handleCollisionsY();
 	updateGridPosY();
@@ -84,25 +80,25 @@ void Player::updateGridPosY()
 
 void Player::handleCollisionsX()
 {
-	for (int i = top; i <= bottom; i++)
+	for (int i = top; i <= bottom; i++) // wall on left
 	{
 		Grid::Tile curTile = { left, i };
 		int index = level.getIndexFromTile(curTile);
 		char curChar = level.findCharAtIndex(index);
 		if (curChar == '1')
 		{
-			pos.x += speed;
+			pos.x -= vel.x;
 			return;
 		}
 	}
-	for (int i = top; i <= bottom; i++)
+	for (int i = top; i <= bottom; i++) // wall on right
 	{
 		Grid::Tile curTile = { right, i };
 		int index = level.getIndexFromTile(curTile);
 		char curChar = level.findCharAtIndex(index);
 		if (curChar == '1')
 		{
-			pos.x -= speed;
+			pos.x -= vel.x;
 			return;
 		}
 	}
@@ -111,25 +107,25 @@ void Player::handleCollisionsX()
 
 void Player::handleCollisionsY()
 {
-	for (int i = left; i <= right; i++)
+	for (int i = left; i <= right; i++) // wall on top
 	{
 		Grid::Tile curTile = { i, top };
 		int index = level.getIndexFromTile(curTile);
 		char curChar = level.findCharAtIndex(index);
 		if (curChar == '1')
 		{
-			pos.y += speed;
+			pos.y -= vel.y;
 			return;
 		}
 	}
-	for (int i = left; i <= right; i++)
+	for (int i = left; i <= right; i++) // wall on bottom
 	{
 		Grid::Tile curTile = { i, bottom };
 		int index = level.getIndexFromTile(curTile);
 		char curChar = level.findCharAtIndex(index);
 		if (curChar == '1')
 		{
-			pos.y -= speed;
+			pos.y -= vel.y;
 			return;
 		}
 	}

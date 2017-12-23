@@ -31,6 +31,7 @@ private:
 	Color color = Colors::Cyan;
 	Graphics& gfx;
 	Level& level;
+	static constexpr float gravity = 6.0f;
 public:
 	int top; // The row player's top edge is in
 	int bottom; // The row player's bottom edge is in
