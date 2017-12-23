@@ -14,8 +14,7 @@ public:
 	void drawLevel(Grid& grid);
 	int findStartIndex();
 	std::string getStringFromText(std::ifstream& file);
-	int getXPosFromIndex(int index);
-	int getYPosFromIndex(int index);
+	Grid::Tile getTileFromIndex(int index);
 	int getIndexFromTile(Grid::Tile);
 	char findCharAtIndex(int index);
 

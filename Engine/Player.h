@@ -15,13 +15,13 @@ public:
 	void drawPlayer();
 	void Update(Keyboard& kbd);
 	void updateGridPos();
-	bool isColliding();
+	void handleCollisions(Vec2& oldPos);
 
 	Vec2 getPos();
 	int getWidth();
 	int getHeight();
 private:
-	Vec2 pos;
+	Vec2 pos; // top-left corner of player rectangle
 	Vec2 vel;
 	static constexpr int width = 20;
 	static constexpr int height = 40;
@@ -29,8 +29,8 @@ private:
 	Graphics& gfx;
 	Level& level;
 public:
-	int top;
-	int bottom;
-	int left;
-	int right;
+	int top; // The row player's top edge is in
+	int bottom; // The row player's bottom edge is in
+	int left; // The column player's left edge is in
+	int right; // The column player's right edge is in
 };

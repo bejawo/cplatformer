@@ -11,10 +11,9 @@ Player::Player(Graphics& gfx, Level& level)
 	// convert to grid coords
 	// convert to screen position
 	int startIndex = level.getStartIndex();
-	int x = level.getXPosFromIndex(startIndex);
-	int y = level.getYPosFromIndex(startIndex);
-	pos.x = float(x * Grid::dimension);
-	pos.y = float(y * Grid::dimension);
+	Grid::Tile startTile = level.getTileFromIndex(startIndex);
+	pos.x = float(startTile.x * Grid::dimension);
+	pos.y = float(startTile.y * Grid::dimension);
 	updateGridPos();
 }
 
@@ -58,13 +57,10 @@ void Player::Update(Keyboard& kbd)
 		vel.y = 0.0f;
 	}
 
-	if (isColliding())
-	{
-		vel.x = 0.0f;
-		vel.y = 0.0f;
-	}
-
+	Vec2 oldPos = pos;
 	pos = pos + vel;
+
+	handleCollisions(oldPos);
 
 	updateGridPos();
 }
@@ -77,10 +73,11 @@ void Player::updateGridPos()
 	right = (int) (pos.x + width) / Grid::dimension;
 }
 
-bool Player::isColliding()
+void Player::handleCollisions(Vec2& oldPos)
 {
+	// Check whether any tiles the player is touching are walls
 	Grid::Tile curTile;
-	for (int j = top; j <= bottom; j++)
+	for (int j = top; j <= bottom; j++) // TODO: only check outer tiles? corner tiles?
 	{
 		for (int i = left; i <= right; i++)
 		{
@@ -89,10 +86,32 @@ bool Player::isColliding()
 			int index = level.getIndexFromTile(curTile);
 			char curChar = level.findCharAtIndex(index);
 			if (curChar == '1')
-				return true;
+			{
+				//if (curTile.x == left)
+				//{
+				//	// left
+				//	pos.x++;
+				//}
+				//else if (curTile.x == right)
+				//{
+				//	// right
+				//	pos.x--;
+				//}
+				//if (curTile.y == top)
+				//{
+				//	// top
+				//	pos.y++;
+				//}
+				//else if (curTile.y == bottom)
+				//{
+				//	// bottom
+				//	pos.y--;
+				//}
+				pos = oldPos;
+			}
 		}
 	}
-	return false;
+	return;
 }
 
 Vec2 Player::getPos()

@@ -16,22 +16,21 @@ void Level::drawLevel(Grid & grid)
 	for (int i = 0; i < length; i++)
 	{
 		curChar = levelString.at(i);
-		int x = getXPosFromIndex(i);
-		int y = getYPosFromIndex(i);
+		Grid::Tile tile = getTileFromIndex(i);
 
 		switch (curChar)
 		{
 		case '0':
-			grid.DrawCell(x, y, Colors::Gray);
+			grid.DrawCell(tile, Colors::Gray);
 			break;
 		case '1':
-			grid.DrawCell(x, y, Colors::Red);
+			grid.DrawCell(tile, Colors::Red);
 			break;
 		case 'S':
-			grid.DrawCell(x, y, Colors::Blue);
+			grid.DrawCell(tile, Colors::Blue);
 			break;
 		case 'F':
-			grid.DrawCell(x, y, Colors::Green);
+			grid.DrawCell(tile, Colors::Green);
 			break;
 		}
 	}
@@ -51,19 +50,16 @@ std::string Level::getStringFromText(std::ifstream& file)
 {
 	std::string str;
 	str.assign( (std::istreambuf_iterator<char>(file)),
-						(std::istreambuf_iterator<char>()) );
+				(std::istreambuf_iterator<char>()) );
 	str.erase(std::remove(str.begin(), str.end(), '\n'), str.end());
 	return str;
 }
 
-int Level::getXPosFromIndex(int index)
+Grid::Tile Level::getTileFromIndex(int index)
 {
-	return index % dimWidth;
-}
-
-int Level::getYPosFromIndex(int index)
-{
-	return index / dimHeight;
+	int x = index % dimWidth;
+	int y = index / dimHeight;
+	return {x, y};
 }
 
 int Level::getIndexFromTile(Grid::Tile tile)

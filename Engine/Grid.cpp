@@ -6,9 +6,9 @@ Grid::Grid(Graphics& gfx)
 {
 }
 
-void Grid::DrawCell(int x, int y, Color c)
+void Grid::DrawCell(Grid::Tile tile, Color c)
 {
-	gfx.DrawRect(x * dimension, y * dimension, dimension, dimension, c);
+	gfx.DrawRect(tile.x * dimension, tile.y * dimension, dimension, dimension, c);
 }
 
 Grid::Tile Grid::findTileFromPixel(int x, int y)

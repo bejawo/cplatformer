@@ -42,7 +42,6 @@ void Game::Go()
 void Game::UpdateModel()
 {
 	tibby.Update(wnd.kbd);
-	bool isColliding = tibby.isColliding();
 }
 
 void Game::ComposeFrame()
