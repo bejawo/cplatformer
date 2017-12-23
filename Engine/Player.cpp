@@ -7,14 +7,14 @@ Player::Player(Graphics& gfx, Level& level)
 {
 	vel.x = 0.0f;
 	vel.y = 0.0f;
-	// find S position in levelString
-	// convert to grid coords
-	// convert to screen position
-	int startIndex = level.getStartIndex();
-	Grid::Tile startTile = level.getTileFromIndex(startIndex);
+	
+	int startIndex = level.getStartIndex(); // find start index in levelString
+	Grid::Tile startTile = level.getTileFromIndex(startIndex); // convert index to tile position
+	// position player in start tile
 	pos.x = float(startTile.x * Grid::dimension);
 	pos.y = float(startTile.y * Grid::dimension);
-	updateGridPos();
+	updateGridPosX();
+	updateGridPosY();
 }
 
 Vec2 Player::getPosFromLevelIndex(int index, int gridWidth, int gridHeight)
@@ -33,11 +33,11 @@ void Player::Update(Keyboard& kbd)
 {
 	if (kbd.KeyIsPressed(VK_LEFT))
 	{
-		vel.x = -3.0f;
+		vel.x = -speed;
 	}
 	else if (kbd.KeyIsPressed(VK_RIGHT))
 	{
-		vel.x = 3.0f;
+		vel.x = speed;
 	}
 	else
 	{
@@ -46,69 +46,91 @@ void Player::Update(Keyboard& kbd)
 
 	if (kbd.KeyIsPressed(VK_UP))
 	{
-		vel.y = -3.0f;
+		vel.y = -speed;
 	}
 	else if (kbd.KeyIsPressed(VK_DOWN))
 	{
-		vel.y = 3.0f;
+		vel.y = speed;
 	}
 	else
 	{
 		vel.y = 0.0f;
 	}
 
-	Vec2 oldPos = pos;
-	pos = pos + vel;
+	// x movement
+	pos.x = pos.x + vel.x;
+	updateGridPosX();
+	handleCollisionsX();
+	updateGridPosX();
 
-	handleCollisions(oldPos);
-
-	updateGridPos();
+	// y movement
+	pos.y = pos.y + vel.y;
+	updateGridPosY();
+	handleCollisionsY();
+	updateGridPosY();
 }
 
-void Player::updateGridPos()
+void Player::updateGridPosX()
 {
-	top = (int) pos.y / Grid::dimension;
-	bottom = (int) (pos.y + height) / Grid::dimension;
 	left = (int) pos.x / Grid::dimension;
 	right = (int) (pos.x + width) / Grid::dimension;
 }
 
-void Player::handleCollisions(Vec2& oldPos)
+void Player::updateGridPosY()
 {
-	// Check whether any tiles the player is touching are walls
-	Grid::Tile curTile;
-	for (int j = top; j <= bottom; j++) // TODO: only check outer tiles? corner tiles?
+	top = (int) pos.y / Grid::dimension;
+	bottom = (int) (pos.y + height) / Grid::dimension;
+}
+
+void Player::handleCollisionsX()
+{
+	for (int i = top; i <= bottom; i++)
 	{
-		for (int i = left; i <= right; i++)
+		Grid::Tile curTile = { left, i };
+		int index = level.getIndexFromTile(curTile);
+		char curChar = level.findCharAtIndex(index);
+		if (curChar == '1')
 		{
-			curTile.x = i;
-			curTile.y = j;
-			int index = level.getIndexFromTile(curTile);
-			char curChar = level.findCharAtIndex(index);
-			if (curChar == '1')
-			{
-				//if (curTile.x == left)
-				//{
-				//	// left
-				//	pos.x++;
-				//}
-				//else if (curTile.x == right)
-				//{
-				//	// right
-				//	pos.x--;
-				//}
-				//if (curTile.y == top)
-				//{
-				//	// top
-				//	pos.y++;
-				//}
-				//else if (curTile.y == bottom)
-				//{
-				//	// bottom
-				//	pos.y--;
-				//}
-				pos = oldPos;
-			}
+			pos.x += speed;
+			return;
+		}
+	}
+	for (int i = top; i <= bottom; i++)
+	{
+		Grid::Tile curTile = { right, i };
+		int index = level.getIndexFromTile(curTile);
+		char curChar = level.findCharAtIndex(index);
+		if (curChar == '1')
+		{
+			pos.x -= speed;
+			return;
+		}
+	}
+	return;
+}
+
+void Player::handleCollisionsY()
+{
+	for (int i = left; i <= right; i++)
+	{
+		Grid::Tile curTile = { i, top };
+		int index = level.getIndexFromTile(curTile);
+		char curChar = level.findCharAtIndex(index);
+		if (curChar == '1')
+		{
+			pos.y += speed;
+			return;
+		}
+	}
+	for (int i = left; i <= right; i++)
+	{
+		Grid::Tile curTile = { i, bottom };
+		int index = level.getIndexFromTile(curTile);
+		char curChar = level.findCharAtIndex(index);
+		if (curChar == '1')
+		{
+			pos.y -= speed;
+			return;
 		}
 	}
 	return;

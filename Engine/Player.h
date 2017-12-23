@@ -14,8 +14,10 @@ public:
 	Vec2 getPosFromLevelIndex(int index, int gridWidth, int gridHeight);
 	void drawPlayer();
 	void Update(Keyboard& kbd);
-	void updateGridPos();
-	void handleCollisions(Vec2& oldPos);
+	void updateGridPosX();
+	void updateGridPosY();
+	void handleCollisionsX();
+	void handleCollisionsY();
 
 	Vec2 getPos();
 	int getWidth();
@@ -23,6 +25,7 @@ public:
 private:
 	Vec2 pos; // top-left corner of player rectangle
 	Vec2 vel;
+	static constexpr float speed = 3.0f;
 	static constexpr int width = 20;
 	static constexpr int height = 40;
 	Color color = Colors::Cyan;
