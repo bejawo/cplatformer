@@ -28,6 +28,7 @@
 #include "Vec2.h"
 #include "Player.h"
 #include "Keyboard.h"
+#include "Surface.h"
 
 class Game
 {
@@ -48,6 +49,7 @@ private:
 	/********************************/
 	/*  User Variables              */
 	/********************************/
+	Surface surf = Surface("../sprites/rgb.bmp");
 	Grid grid;
 	Level level;
 	Player tibby;

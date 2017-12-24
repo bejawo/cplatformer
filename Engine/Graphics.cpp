@@ -327,6 +327,20 @@ void Graphics::DrawRect(int x, int y, int width, int height, Color c)
 	}
 }
 
+void Graphics::DrawSprite(int x, int y, const Surface & s)
+{
+	const int width = s.GetWidth();
+	const int height = s.GetHeight();
+	for (int sy = 0; sy < height; sy++)
+	{
+		for (int sx = 0; sx < width; sx++)
+		{
+			PutPixel(x + sx, y + sy, s.GetPixel(sx, sy));
+		}
+	}
+
+}
+
 
 //////////////////////////////////////////////////
 //           Graphics Exception
