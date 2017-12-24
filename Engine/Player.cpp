@@ -1,9 +1,10 @@
 #include "Player.h"
 
-Player::Player(Graphics& gfx, Level& level)
+Player::Player(Graphics& gfx, Level& level, Surface& s)
 	:
 	gfx(gfx),
-	level(level)
+	level(level),
+	playerSprite(s)
 {
 	vel.x = 0.0f;
 	vel.y = 0.0f;
@@ -20,7 +21,7 @@ Vec2 Player::getPosFromLevelIndex(int index, int gridWidth, int gridHeight)
 
 void Player::drawPlayer()
 {
-	gfx.DrawRect((int)pos.x, (int)pos.y, width, height, color);
+	gfx.DrawSprite((int)pos.x, (int)pos.y, playerSprite);
 }
 
 void Player::ResetPosition()

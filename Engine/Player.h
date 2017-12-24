@@ -6,11 +6,12 @@
 #include "Level.h"
 #include <string>
 #include "Keyboard.h"
+#include "Surface.h"
 
 class Player
 {
 public:
-	Player(Graphics& gfx, Level& level);
+	Player(Graphics& gfx, Level& level, Surface& s);
 	Vec2 getPosFromLevelIndex(int index, int gridWidth, int gridHeight);
 	void drawPlayer();
 	void ResetPosition();
@@ -37,6 +38,7 @@ private:
 	bool isJumping = false;
 
 	const float dt = 1 / 60;
+	Surface& playerSprite;
 public:
 	int top; // The row player's top edge is in
 	int bottom; // The row player's bottom edge is in
