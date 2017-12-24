@@ -41,12 +41,12 @@ void Game::Go()
 
 void Game::UpdateModel()
 {
-	tibby.Update(wnd.kbd);
+	//tibby.Update(wnd.kbd);
 }
 
 void Game::ComposeFrame()
 {
 	gfx.DrawSprite(0, 0, surf);
-	level.drawLevel(grid);
-	tibby.drawPlayer();
+	//level.drawLevel(grid);
+	//tibby.drawPlayer();
 }

@@ -49,7 +49,7 @@ private:
 	/********************************/
 	/*  User Variables              */
 	/********************************/
-	Surface surf = Surface("../sprites/rgb.bmp");
+	Surface surf = Surface("../sprites/dib32.bmp");
 	Grid grid;
 	Level level;
 	Player tibby;
