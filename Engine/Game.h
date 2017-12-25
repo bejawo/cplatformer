@@ -50,7 +50,6 @@ private:
 	/*  User Variables              */
 	/********************************/
 	FrameTimer ft;
-	float dt;
 	Grid grid;
 	Level level;
 	Player tibby;

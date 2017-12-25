@@ -14,7 +14,7 @@ public:
 	Vec2 getPosFromLevelIndex(int index, int gridWidth, int gridHeight);
 	void drawPlayer();
 	void ResetPosition();
-	void Update(Keyboard& kbd);
+	void Update(Keyboard& kbd, float dt);
 	void updateGridPosX();
 	void updateGridPosY();
 	void handleCollisionsX();
@@ -24,6 +24,7 @@ public:
 	Vec2 getPos();
 	int getWidth();
 	int getHeight();
+
 private:
 	Vec2 pos; // top-left corner of player rectangle
 	Vec2 vel;
@@ -35,8 +36,8 @@ private:
 	Level& level;
 	static constexpr float gravity = 1.0f;
 	bool isJumping = false;
+	float dt;
 
-	const float dt = 1 / 60;
 public:
 	int top; // The row player's top edge is in
 	int bottom; // The row player's bottom edge is in

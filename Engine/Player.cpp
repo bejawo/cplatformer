@@ -34,15 +34,15 @@ void Player::ResetPosition()
 	updateGridPosY();
 }
 
-void Player::Update(Keyboard& kbd)
+void Player::Update(Keyboard& kbd, float dt)
 {
 	if (kbd.KeyIsPressed(VK_LEFT))
 	{
-		vel.x = -speed;
+		vel.x = -speed * dt * 60.0f;
 	}
 	else if (kbd.KeyIsPressed(VK_RIGHT))
 	{
-		vel.x = speed;
+		vel.x = speed * dt * 60.0f;
 	}
 	else
 	{
@@ -54,7 +54,7 @@ void Player::Update(Keyboard& kbd)
 		if (!isJumping && vel.y == 0) // Prevent jumping while falling (will need to change to enable jumping off a moving platform for example)
 		{
 			isJumping = true;
-			vel.y -= 12.0f;
+			vel.y -= 12.0f * dt * 60.0f;
 		}
 	}
 
@@ -70,6 +70,8 @@ void Player::Update(Keyboard& kbd)
 	updateGridPosX();
 
 	// y movement
+
+	//vel.y += gravity * dt * 60.0f; // TODO: fix gravity
 	vel.y += gravity;
 	pos.y += vel.y;
 	updateGridPosY();

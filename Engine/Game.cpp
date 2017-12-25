@@ -41,12 +41,12 @@ void Game::Go()
 
 void Game::UpdateModel()
 {
-	tibby.Update(wnd.kbd);
+	const float dt = ft.Mark();
+	tibby.Update(wnd.kbd, dt);
 }
 
 void Game::ComposeFrame()
 {
-	dt = ft.Mark();
 	level.drawLevel(grid);
 	tibby.drawPlayer();
 }
