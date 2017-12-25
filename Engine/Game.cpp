@@ -46,6 +46,7 @@ void Game::UpdateModel()
 
 void Game::ComposeFrame()
 {
+	dt = ft.Mark();
 	level.drawLevel(grid);
 	tibby.drawPlayer();
 }

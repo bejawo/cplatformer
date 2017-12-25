@@ -28,6 +28,7 @@
 #include "Vec2.h"
 #include "Player.h"
 #include "Keyboard.h"
+#include "FrameTimer.h"
 
 class Game
 {
@@ -48,6 +49,8 @@ private:
 	/********************************/
 	/*  User Variables              */
 	/********************************/
+	FrameTimer ft;
+	float dt;
 	Grid grid;
 	Level level;
 	Player tibby;
