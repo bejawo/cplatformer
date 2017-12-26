@@ -1,6 +1,6 @@
 #include "Level.h"
 
-Level::Level(Grid& grid)
+Level::Level(const Grid& grid)
 	:
 	grid(grid)
 {
@@ -9,36 +9,36 @@ Level::Level(Grid& grid)
 	startIndex = findStartIndex();
 }
 
-void Level::drawLevel(Grid & grid)
+void Level::drawLevel(const Grid& grid)
 {
-	char curChar;
-	int length = (int)levelString.length();
+	const int length = (int) levelString.length();
+
 	for (int i = 0; i < length; i++)
 	{
-		curChar = levelString.at(i);
-		Grid::Tile tile = getTileFromIndex(i);
+		const char curChar = levelString.at(i);
+		const Grid::Tile tile = getTileFromIndex(i);
 
 		switch (curChar)
 		{
 		case '0':
-			grid.DrawCell(tile, Colors::Gray);
+			grid.DrawTile(tile, Colors::Gray);
 			break;
 		case '1':
-			grid.DrawCell(tile, Colors::Red);
+			grid.DrawTile(tile, Colors::Red);
 			break;
 		case 'S':
-			grid.DrawCell(tile, Colors::Blue);
+			grid.DrawTile(tile, Colors::Blue);
 			break;
 		case 'F':
-			grid.DrawCell(tile, Colors::Green);
+			grid.DrawTile(tile, Colors::Green);
 			break;
 		}
 	}
 }
 
-int Level::findStartIndex()
+int Level::findStartIndex() const
 {
-	for (int i = 0; i < numCells; i++)
+	for (int i = 0; i < numTiles; i++)
 	{
 		if (levelString.at(i) == 'S')
 			return i;
@@ -55,29 +55,29 @@ std::string Level::getStringFromText(std::ifstream& file)
 	return str;
 }
 
-Grid::Tile Level::getTileFromIndex(int index)
+Grid::Tile Level::getTileFromIndex(int index) const
 {
-	int x = index % dimWidth;
-	int y = index / dimHeight;
+	int x = index % tilesPerRow;
+	int y = index / tilesPerColumn;
 	return {x, y};
 }
 
-int Level::getIndexFromTile(Grid::Tile tile)
+int Level::getIndexFromTile(Grid::Tile tile) const
 {
-	return tile.y * dimWidth + tile.x;
+	return tile.y * tilesPerRow + tile.x;
 }
 
-char Level::findCharAtIndex(int index)
+char Level::findCharAtIndex(int index) const
 {
 	return (char) levelString.at(index);
 }
 
-int Level::getStartIndex()
+int Level::getStartIndex() const
 {
 	return startIndex;
 }
 
-std::string Level::getLevelString()
+std::string Level::getLevelString() const
 {
 	return levelString;
 }

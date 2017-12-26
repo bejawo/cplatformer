@@ -11,13 +11,15 @@ public:
 		int x;
 		int y;
 	};
+
 public:
 	Grid(Graphics& gfx);
-	void DrawCell(Grid::Tile tile, Color c);
-	Tile findTileFromPixel(int x, int y);
+	void DrawTile(Grid::Tile tile, Color c) const;
+	Tile findTileFromPixel(int x, int y) const;
 
 private:
 	Graphics& gfx;
+
 public:
 	static constexpr int dimension = 60; // tile size in pixels
 };

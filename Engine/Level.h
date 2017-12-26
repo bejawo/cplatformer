@@ -10,25 +10,27 @@
 class Level
 {
 public:
-	Level(Grid& grid);
-	void drawLevel(Grid& grid);
-	int findStartIndex();
+	Level(const Grid& grid);
+	void drawLevel(const Grid& grid);
+	int findStartIndex() const;
 	std::string getStringFromText(std::ifstream& file);
-	Grid::Tile getTileFromIndex(int index);
-	int getIndexFromTile(Grid::Tile);
-	char findCharAtIndex(int index);
+	Grid::Tile getTileFromIndex(int index) const;
+	int getIndexFromTile(Grid::Tile tile) const;
+	char findCharAtIndex(int index) const;
 
-	int getStartIndex();
-	std::string getLevelString();
+	int getStartIndex() const;
+	std::string getLevelString() const;
+
 private:
-	static constexpr int dimWidth = 8;
-	static constexpr int dimHeight = 8;
-	static constexpr int numCells = dimWidth * dimHeight;
+	static constexpr int tilesPerRow = 8;
+	static constexpr int tilesPerColumn = 8;
+	static constexpr int numTiles = tilesPerRow * tilesPerColumn;
 	std::string levelString;
 	std::ifstream levelFile;
 	int startIndex;
-	Grid& grid;
+	const Grid& grid;
+
 public:
-	static constexpr int width = dimWidth * Grid::dimension; // Width in pixels
-	static constexpr int height = dimHeight * Grid::dimension; // Height in pixels
+	static constexpr int width = tilesPerRow * Grid::dimension; // Width in pixels
+	static constexpr int height = tilesPerColumn * Grid::dimension; // Height in pixels
 };

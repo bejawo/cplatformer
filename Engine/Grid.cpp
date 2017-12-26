@@ -6,12 +6,12 @@ Grid::Grid(Graphics& gfx)
 {
 }
 
-void Grid::DrawCell(Grid::Tile tile, Color c)
+void Grid::DrawTile(Grid::Tile tile, Color c) const
 {
 	gfx.DrawRect(tile.x * dimension, tile.y * dimension, dimension, dimension, c);
 }
 
-Grid::Tile Grid::findTileFromPixel(int x, int y)
+Grid::Tile Grid::findTileFromPixel(int x, int y) const
 {
 	int tileX = x / dimension;
 	int tileY = y / dimension;
