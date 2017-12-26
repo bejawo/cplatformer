@@ -36,11 +36,11 @@ void Player::ResetPosition()
 
 void Player::Update(Keyboard& kbd, float dt)
 {
-	if (kbd.KeyIsPressed(VK_LEFT))
+	if (kbd.KeyIsPressed(ControlInput::moveLeft))
 	{
 		vel.x = -speed;
 	}
-	else if (kbd.KeyIsPressed(VK_RIGHT))
+	else if (kbd.KeyIsPressed(ControlInput::moveRight))
 	{
 		vel.x = speed;
 	}
@@ -49,7 +49,7 @@ void Player::Update(Keyboard& kbd, float dt)
 		vel.x = 0.0f;
 	}
 
-	if (kbd.KeyIsPressed(VK_UP))
+	if (kbd.KeyIsPressed(ControlInput::jump))
 	{
 		if (!isJumping && vel.y == 0) // Prevent jumping while falling (will need to change to enable jumping off a moving platform for example)
 		{
@@ -58,7 +58,7 @@ void Player::Update(Keyboard& kbd, float dt)
 		}
 	}
 
-	if (kbd.KeyIsPressed(82)) // R (ascii decimal value)
+	if (kbd.KeyIsPressed(ControlInput::resetPosition))
 	{
 		ResetPosition();
 	}
@@ -72,7 +72,6 @@ void Player::Update(Keyboard& kbd, float dt)
 	// y movement
 
 	vel.y += gravity * dt;
-	//vel.y += gravity;
 	pos.y += vel.y * dt;
 	updateGridPosY();
 	handleCollisionsY(dt);
