@@ -25,9 +25,8 @@ Game::Game(MainWindow& wnd)
 	:
 	wnd(wnd),
 	gfx(wnd),
-	grid(gfx),
 	level(grid),
-	tibby(gfx, level)
+	tibby(level)
 {
 }
 
@@ -42,11 +41,11 @@ void Game::Go()
 void Game::UpdateModel()
 {
 	const float dt = ft.Mark();
-	tibby.Update(wnd.kbd, dt);
+	tibby.update(wnd.kbd, dt);
 }
 
 void Game::ComposeFrame()
 {
-	level.drawLevel(grid);
-	tibby.drawPlayer();
+	level.draw(gfx, grid);
+	tibby.draw(gfx);
 }

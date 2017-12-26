@@ -1,14 +1,13 @@
 #include "Player.h"
 
-Player::Player(Graphics& gfx, Level& level)
+Player::Player(const Level& level)
 	:
-	gfx(gfx),
 	level(level)
 {
 	vel.x = 0.0f;
 	vel.y = 0.0f;
 	
-	ResetPosition();
+	resetPosition();
 }
 
 Vec2 Player::getPosFromLevelIndex(int index, int gridWidth, int gridHeight)
@@ -18,23 +17,22 @@ Vec2 Player::getPosFromLevelIndex(int index, int gridWidth, int gridHeight)
 	return Vec2((float)x, (float)y);
 }
 
-void Player::drawPlayer()
+void Player::draw(Graphics& gfx) const
 {
 	gfx.DrawRect((int)pos.x, (int)pos.y, width, height, color);
 }
 
-void Player::ResetPosition()
+void Player::resetPosition()
 {
-	int startIndex = level.getStartIndex(); // find start index in levelString
-	Grid::Tile startTile = level.getTileFromIndex(startIndex); // convert index to tile position
-	// position player in start tile
-	pos.x = float(startTile.x * Grid::dimension);
-	pos.y = float(startTile.y * Grid::dimension);
+	int startIndex = level.getStartIndex();
+	Grid::Tile startTile = level.convertIndexToTile(startIndex);
+	pos.x = float(startTile.x * Grid::tileWidth);
+	pos.y = float(startTile.y * Grid::tileHeight);
 	updateGridPosX();
 	updateGridPosY();
 }
 
-void Player::Update(Keyboard& kbd, float dt)
+void Player::update(const Keyboard& kbd, float dt)
 {
 	if (kbd.KeyIsPressed(ControlInput::moveLeft))
 	{
@@ -60,7 +58,7 @@ void Player::Update(Keyboard& kbd, float dt)
 
 	if (kbd.KeyIsPressed(ControlInput::resetPosition))
 	{
-		ResetPosition();
+		resetPosition();
 	}
 
 	// x movement
@@ -70,7 +68,6 @@ void Player::Update(Keyboard& kbd, float dt)
 	updateGridPosX();
 
 	// y movement
-
 	vel.y += gravity * dt;
 	pos.y += vel.y * dt;
 	updateGridPosY();
@@ -84,16 +81,16 @@ void Player::updateGridPosX()
 {
 	assert(pos.x >= -10);
 	assert(pos.x < Level::width + 10);
-	left = (int) pos.x / Grid::dimension;
-	right = (int) (pos.x + width) / Grid::dimension;
+	left = (int) pos.x / Grid::tileWidth;
+	right = (int) (pos.x + width) / Grid::tileWidth;
 }
 
 void Player::updateGridPosY()
 {
 	assert(pos.y >= -10);
 	assert(pos.y < Level::height + 10);
-	top = (int) pos.y / Grid::dimension;
-	bottom = (int) (pos.y + height) / Grid::dimension;
+	top = (int) pos.y / Grid::tileHeight;
+	bottom = (int) (pos.y + height) / Grid::tileHeight;
 }
 
 void Player::handleCollisionsX(float dt)
@@ -101,8 +98,8 @@ void Player::handleCollisionsX(float dt)
 	for (int i = top; i <= bottom; i++) // wall on left
 	{
 		Grid::Tile curTile = { left, i };
-		int index = level.getIndexFromTile(curTile);
-		char curChar = level.findCharAtIndex(index);
+		int index = level.convertTileToIndex(curTile);
+		char curChar = level.charAtIndex(index);
 		if (curChar == '1')
 		{
 			pos.x -= vel.x * dt;
@@ -113,8 +110,8 @@ void Player::handleCollisionsX(float dt)
 	for (int i = top; i <= bottom; i++) // wall on right
 	{
 		Grid::Tile curTile = { right, i };
-		int index = level.getIndexFromTile(curTile);
-		char curChar = level.findCharAtIndex(index);
+		int index = level.convertTileToIndex(curTile);
+		char curChar = level.charAtIndex(index);
 		if (curChar == '1')
 		{
 			pos.x -= vel.x * dt;
@@ -130,8 +127,8 @@ void Player::handleCollisionsY(float dt)
 	for (int i = left; i <= right; i++) // wall on top
 	{
 		Grid::Tile curTile = { i, top };
-		int index = level.getIndexFromTile(curTile);
-		char curChar = level.findCharAtIndex(index);
+		int index = level.convertTileToIndex(curTile);
+		char curChar = level.charAtIndex(index);
 		if (curChar == '1')
 		{
 			pos.y -= vel.y * dt;
@@ -142,8 +139,8 @@ void Player::handleCollisionsY(float dt)
 	for (int i = left; i <= right; i++) // wall on bottom
 	{
 		Grid::Tile curTile = { i, bottom };
-		int index = level.getIndexFromTile(curTile);
-		char curChar = level.findCharAtIndex(index);
+		int index = level.convertTileToIndex(curTile);
+		char curChar = level.charAtIndex(index);
 		if (curChar == '1')
 		{
 			pos.y -= vel.y * dt;
@@ -162,7 +159,7 @@ void Player::clampToGrid(float dt)
 		pos.x -= vel.x * dt;
 		vel.x = 0.0f;
 	}
-	if (pos.y < 0 || pos.y + height > Level::height - 15) // TODO: check collision detection - checking cells too far down? (shouldn't need to offset height here)
+	if (pos.y < 0 || pos.y + height > Level::height - 15) // TODO: check collision detection - checking tiles too far down? (shouldn't need to offset height here)
 	{
 		pos.y -= vel.y * dt;
 		vel.y = 0.0f;
@@ -170,17 +167,17 @@ void Player::clampToGrid(float dt)
 	}
 }
 
-Vec2 Player::getPos()
+Vec2 Player::getPos() const
 {
 	return pos;
 }
 
-int Player::getWidth()
+int Player::getWidth() const
 {
 	return width;
 }
 
-int Player::getHeight()
+int Player::getHeight() const
 {
 	return height;
 }

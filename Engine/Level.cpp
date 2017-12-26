@@ -5,48 +5,42 @@ Level::Level(const Grid& grid)
 	grid(grid)
 {
 	levelFile.open("level.txt");
-	levelString = getStringFromText(levelFile);
-	startIndex = findStartIndex();
+	levelString = readFileIntoString(levelFile);
+
+	// Find index of start
+	for (int i = 0; i < numTiles; i++)
+	{
+		if (levelString.at(i) == 'S')
+			startIndex = i;
+	}
 }
 
-void Level::drawLevel(const Grid& grid)
+void Level::draw(Graphics& gfx, const Grid& grid) const
 {
-	const int length = (int) levelString.length();
-
-	for (int i = 0; i < length; i++)
+	for (int i = 0; i < numTiles; i++)
 	{
-		const char curChar = levelString.at(i);
-		const Grid::Tile tile = getTileFromIndex(i);
+		const char curChar = charAtIndex(i);
+		const Grid::Tile tile = convertIndexToTile(i);
 
 		switch (curChar)
 		{
 		case '0':
-			grid.DrawTile(tile, Colors::Gray);
+			grid.DrawTile(gfx, tile, Colors::Gray);
 			break;
 		case '1':
-			grid.DrawTile(tile, Colors::Red);
+			grid.DrawTile(gfx, tile, Colors::Red);
 			break;
 		case 'S':
-			grid.DrawTile(tile, Colors::Blue);
+			grid.DrawTile(gfx, tile, Colors::Blue);
 			break;
 		case 'F':
-			grid.DrawTile(tile, Colors::Green);
+			grid.DrawTile(gfx, tile, Colors::Green);
 			break;
 		}
 	}
 }
 
-int Level::findStartIndex() const
-{
-	for (int i = 0; i < numTiles; i++)
-	{
-		if (levelString.at(i) == 'S')
-			return i;
-	}
-	return -1;
-}
-
-std::string Level::getStringFromText(std::ifstream& file)
+std::string Level::readFileIntoString(std::ifstream& file)
 {
 	std::string str;
 	str.assign( (std::istreambuf_iterator<char>(file)),
@@ -55,19 +49,19 @@ std::string Level::getStringFromText(std::ifstream& file)
 	return str;
 }
 
-Grid::Tile Level::getTileFromIndex(int index) const
+Grid::Tile Level::convertIndexToTile(int index) const
 {
-	int x = index % tilesPerRow;
-	int y = index / tilesPerColumn;
+	int x = index % tilesWide;
+	int y = index / tilesHigh;
 	return {x, y};
 }
 
-int Level::getIndexFromTile(Grid::Tile tile) const
+int Level::convertTileToIndex(Grid::Tile tile) const
 {
-	return tile.y * tilesPerRow + tile.x;
+	return tile.y * tilesWide + tile.x;
 }
 
-char Level::findCharAtIndex(int index) const
+char Level::charAtIndex(int index) const
 {
 	return (char) levelString.at(index);
 }

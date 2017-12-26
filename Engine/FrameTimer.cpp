@@ -9,9 +9,9 @@ FrameTimer::FrameTimer()
 
 float FrameTimer::Mark()
 {
-	steady_clock::time_point old = last;
+	const steady_clock::time_point old = last;
 	last = steady_clock::now();
-	duration<float> frameTime = last - old;
+	const duration<float> frameTime = last - old;
 
 	return frameTime.count();
 }
