@@ -4,7 +4,7 @@ using namespace std::chrono;
 
 FrameTimer::FrameTimer()
 {
-	steady_clock::time_point last = steady_clock::now();
+	last = steady_clock::now();
 }
 
 float FrameTimer::Mark()

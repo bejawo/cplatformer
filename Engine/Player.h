@@ -6,6 +6,7 @@
 #include "Level.h"
 #include <string>
 #include "Keyboard.h"
+#include <cassert>
 
 class Player
 {
@@ -17,9 +18,9 @@ public:
 	void Update(Keyboard& kbd, float dt);
 	void updateGridPosX();
 	void updateGridPosY();
-	void handleCollisionsX();
-	void handleCollisionsY();
-	void clampToGrid();
+	void handleCollisionsX(float dt);
+	void handleCollisionsY(float dt);
+	void clampToGrid(float dt);
 
 	Vec2 getPos();
 	int getWidth();
@@ -28,15 +29,15 @@ public:
 private:
 	Vec2 pos; // top-left corner of player rectangle
 	Vec2 vel;
-	static constexpr float speed = 3.0f;
+	static constexpr float speed = 3.0f * 60.0f;
 	static constexpr int width = 20;
 	static constexpr int height = 40;
 	Color color = Colors::Cyan;
 	Graphics& gfx;
 	Level& level;
-	static constexpr float gravity = 1.0f;
+	static constexpr float gravity = 20.0f * 60.0f;
 	bool isJumping = false;
-	float dt;
+	static constexpr float jumpSpeed = 360.0f * 60.0f;
 
 public:
 	int top; // The row player's top edge is in

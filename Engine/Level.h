@@ -29,6 +29,6 @@ private:
 	int startIndex;
 	Grid& grid;
 public:
-	static constexpr int width = dimWidth * Grid::dimension;
-	static constexpr int height = dimHeight * Grid::dimension;
+	static constexpr int width = dimWidth * Grid::dimension; // Width in pixels
+	static constexpr int height = dimHeight * Grid::dimension; // Height in pixels
 };

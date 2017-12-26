@@ -38,11 +38,11 @@ void Player::Update(Keyboard& kbd, float dt)
 {
 	if (kbd.KeyIsPressed(VK_LEFT))
 	{
-		vel.x = -speed * dt * 60.0f;
+		vel.x = -speed;
 	}
 	else if (kbd.KeyIsPressed(VK_RIGHT))
 	{
-		vel.x = speed * dt * 60.0f;
+		vel.x = speed;
 	}
 	else
 	{
@@ -54,7 +54,8 @@ void Player::Update(Keyboard& kbd, float dt)
 		if (!isJumping && vel.y == 0) // Prevent jumping while falling (will need to change to enable jumping off a moving platform for example)
 		{
 			isJumping = true;
-			vel.y -= 12.0f * dt * 60.0f;
+			//vel.y -= jumpSpeed * dt;
+			vel.y = -jumpSpeed * dt;
 		}
 	}
 
@@ -64,36 +65,40 @@ void Player::Update(Keyboard& kbd, float dt)
 	}
 
 	// x movement
-	pos.x += vel.x;
+	pos.x += vel.x * dt;
 	updateGridPosX();
-	handleCollisionsX();
+	handleCollisionsX(dt);
 	updateGridPosX();
 
 	// y movement
 
-	//vel.y += gravity * dt * 60.0f; // TODO: fix gravity
-	vel.y += gravity;
-	pos.y += vel.y;
+	vel.y += gravity * dt; // TODO: fix gravity - need to fall at same rate
+	//vel.y += gravity;
+	pos.y += vel.y * dt;
 	updateGridPosY();
-	handleCollisionsY();
+	handleCollisionsY(dt);
 	updateGridPosY();
 
-	clampToGrid();
+	clampToGrid(dt);
 }
 
 void Player::updateGridPosX()
 {
+	//assert(pos.x >= 0);
+	//assert(pos.x < Level::width);
 	left = (int) pos.x / Grid::dimension;
 	right = (int) (pos.x + width) / Grid::dimension;
 }
 
 void Player::updateGridPosY()
 {
+	//assert(pos.y >= 0);
+	//assert(pos.y < Level::height);
 	top = (int) pos.y / Grid::dimension;
 	bottom = (int) (pos.y + height) / Grid::dimension;
 }
 
-void Player::handleCollisionsX()
+void Player::handleCollisionsX(float dt)
 {
 	for (int i = top; i <= bottom; i++) // wall on left
 	{
@@ -102,7 +107,7 @@ void Player::handleCollisionsX()
 		char curChar = level.findCharAtIndex(index);
 		if (curChar == '1')
 		{
-			pos.x -= vel.x;
+			pos.x -= vel.x * dt;
 			vel.x = 0.0f;
 			return;
 		}
@@ -114,7 +119,7 @@ void Player::handleCollisionsX()
 		char curChar = level.findCharAtIndex(index);
 		if (curChar == '1')
 		{
-			pos.x -= vel.x;
+			pos.x -= vel.x * dt;
 			vel.x = 0.0f;
 			return;
 		}
@@ -122,7 +127,7 @@ void Player::handleCollisionsX()
 	return;
 }
 
-void Player::handleCollisionsY()
+void Player::handleCollisionsY(float dt)
 {
 	for (int i = left; i <= right; i++) // wall on top
 	{
@@ -131,7 +136,7 @@ void Player::handleCollisionsY()
 		char curChar = level.findCharAtIndex(index);
 		if (curChar == '1')
 		{
-			pos.y -= vel.y;
+			pos.y -= vel.y * dt;
 			vel.y = 0.0f;
 			return;
 		}
@@ -143,7 +148,7 @@ void Player::handleCollisionsY()
 		char curChar = level.findCharAtIndex(index);
 		if (curChar == '1')
 		{
-			pos.y -= vel.y;
+			pos.y -= vel.y * dt;
 			vel.y = 0.0f;
 			isJumping = false;
 			return;
@@ -152,16 +157,16 @@ void Player::handleCollisionsY()
 	return;
 }
 
-void Player::clampToGrid()
+void Player::clampToGrid(float dt)
 {
 	if (pos.x < 0 || pos.x + width > Level::width)
 	{
-		pos.x -= vel.x;
+		pos.x -= vel.x * dt;
 		vel.x = 0.0f;
 	}
 	if (pos.y < 0 || pos.y + height > Level::height - 15) // TODO: check collision detection - checking cells too far down? (shouldn't need to offset height here)
 	{
-		pos.y -= vel.y;
+		pos.y -= vel.y * dt;
 		vel.y = 0.0f;
 		isJumping = false;
 	}
