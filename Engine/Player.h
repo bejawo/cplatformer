@@ -37,7 +37,7 @@ private:
 	Level& level;
 	static constexpr float gravity = 20.0f * 60.0f;
 	bool isJumping = false;
-	static constexpr float jumpSpeed = 360.0f * 60.0f;
+	static constexpr float jumpSpeed = 7.0f * 60.0f;
 
 public:
 	int top; // The row player's top edge is in

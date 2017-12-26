@@ -54,8 +54,7 @@ void Player::Update(Keyboard& kbd, float dt)
 		if (!isJumping && vel.y == 0) // Prevent jumping while falling (will need to change to enable jumping off a moving platform for example)
 		{
 			isJumping = true;
-			//vel.y -= jumpSpeed * dt;
-			vel.y = -jumpSpeed * dt;
+			vel.y = -jumpSpeed;
 		}
 	}
 
@@ -72,7 +71,7 @@ void Player::Update(Keyboard& kbd, float dt)
 
 	// y movement
 
-	vel.y += gravity * dt; // TODO: fix gravity - need to fall at same rate
+	vel.y += gravity * dt;
 	//vel.y += gravity;
 	pos.y += vel.y * dt;
 	updateGridPosY();
@@ -84,16 +83,16 @@ void Player::Update(Keyboard& kbd, float dt)
 
 void Player::updateGridPosX()
 {
-	//assert(pos.x >= 0);
-	//assert(pos.x < Level::width);
+	assert(pos.x >= -10);
+	assert(pos.x < Level::width + 10);
 	left = (int) pos.x / Grid::dimension;
 	right = (int) (pos.x + width) / Grid::dimension;
 }
 
 void Player::updateGridPosY()
 {
-	//assert(pos.y >= 0);
-	//assert(pos.y < Level::height);
+	assert(pos.y >= -10);
+	assert(pos.y < Level::height + 10);
 	top = (int) pos.y / Grid::dimension;
 	bottom = (int) (pos.y + height) / Grid::dimension;
 }
