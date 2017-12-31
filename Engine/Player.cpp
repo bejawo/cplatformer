@@ -97,10 +97,8 @@ void Player::handleCollisionsX(float dt)
 {
 	for (int i = top; i <= bottom; i++) // wall on left
 	{
-		Grid::Tile curTile = { left, i };
-		int index = level.convertTileToIndex(curTile);
-		char curChar = level.charAtIndex(index);
-		if (curChar == '1')
+		int curInt = level.intAtTile({ left, i });
+		if (curInt == 1)
 		{
 			pos.x -= vel.x * dt;
 			vel.x = 0.0f;
@@ -109,10 +107,8 @@ void Player::handleCollisionsX(float dt)
 	}
 	for (int i = top; i <= bottom; i++) // wall on right
 	{
-		Grid::Tile curTile = { right, i };
-		int index = level.convertTileToIndex(curTile);
-		char curChar = level.charAtIndex(index);
-		if (curChar == '1')
+		int curInt = level.intAtTile({ right, i });
+		if (curInt == 1)
 		{
 			pos.x -= vel.x * dt;
 			vel.x = 0.0f;
@@ -126,10 +122,8 @@ void Player::handleCollisionsY(float dt)
 {
 	for (int i = left; i <= right; i++) // wall on top
 	{
-		Grid::Tile curTile = { i, top };
-		int index = level.convertTileToIndex(curTile);
-		char curChar = level.charAtIndex(index);
-		if (curChar == '1')
+		int curInt = level.intAtTile({ i, top });
+		if (curInt == 1)
 		{
 			pos.y -= vel.y * dt;
 			vel.y = 0.0f;
@@ -138,10 +132,8 @@ void Player::handleCollisionsY(float dt)
 	}
 	for (int i = left; i <= right; i++) // wall on bottom
 	{
-		Grid::Tile curTile = { i, bottom };
-		int index = level.convertTileToIndex(curTile);
-		char curChar = level.charAtIndex(index);
-		if (curChar == '1')
+		int curInt = level.intAtTile({ i, bottom});
+		if (curInt == 1)
 		{
 			pos.y -= vel.y * dt;
 			vel.y = 0.0f;

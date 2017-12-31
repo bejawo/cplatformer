@@ -9,13 +9,20 @@
 
 class Level
 {
+	//struct TileProperties
+	//{
+	//	bool isWall;
+	//	// TODO: add more props here e.g. sprite file, spriteCoords, etc.
+	//};
+
 public:
 	Level(const Grid& grid);
 	void draw(Graphics& gfx, const Grid& grid) const;
-	std::string readFileIntoString(std::ifstream& file);
+	void createArrayFromFile(std::ifstream& file);
+	int charToInt(char c) const;
 	Grid::Tile convertIndexToTile(int index) const;
 	int convertTileToIndex(Grid::Tile tile) const;
-	char charAtIndex(int index) const;
+	int intAtTile(const Grid::Tile& tile) const;
 
 	int getStartIndex() const;
 	std::string getLevelString() const;
@@ -25,9 +32,19 @@ private:
 	static constexpr int tilesHigh = 8;
 	static constexpr int numTiles = tilesWide * tilesHigh;
 	std::string levelString;
+	int* levelArray;
+	int la[numTiles];
 	std::ifstream levelFile;
 	int startIndex = 0;
 	const Grid& grid;
+/*
+	TileProperties tileSet[] = {
+		{ false, "sprites.bmp", 0, 0 },
+		{ true, "sprites.bmp", 100, 0 },
+		{ false, "sprites.bmp", 200, 0 },
+		{ false, "sprites.bmp", 0, 100 },
+		{ false, "sprites.bmp", 100, 200 }
+	};*/
 
 public:
 	static constexpr int width = tilesWide * Grid::tileWidth; // Width in pixels
