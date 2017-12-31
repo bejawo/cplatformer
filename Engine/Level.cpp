@@ -6,17 +6,15 @@ Level::Level(const Grid& grid)
 {
 	levelFile.open("level.txt");
 	createArrayFromFile(levelFile, levelArray);
-	int asdf = levelArray[63];
 
 	// Find index of start
 	for (int i = 0; i < numTiles; i++)
 	{
-		if (levelArray[i] == 2)
+		if (levelArray[i] == TileType::Start)
 		{
 			startIndex = i;
 			break;
 		}
-			
 	}
 }
 
@@ -24,28 +22,30 @@ void Level::draw(Graphics& gfx, const Grid& grid) const
 {
 	for (int i = 0; i < numTiles; i++)
 	{
-		const int curElem = levelArray[i];
 		const Grid::Tile tile = convertIndexToTile(i);
 
-		switch (curElem)
+		switch (levelArray[i])
 		{
-		case 0:
+		case TileType::Empty:
 			grid.DrawTile(gfx, tile, Colors::Gray);
 			break;
-		case 1:
+		case TileType::Wall:
 			grid.DrawTile(gfx, tile, Colors::Red);
 			break;
-		case 2:
+		case TileType::Start:
 			grid.DrawTile(gfx, tile, Colors::Blue);
 			break;
-		case 3:
+		case TileType::Finish:
 			grid.DrawTile(gfx, tile, Colors::Green);
+			break;
+		case TileType::Unknown:
+			grid.DrawTile(gfx, tile, Colors::Magenta);
 			break;
 		}
 	}
 }
 
-void Level::createArrayFromFile(std::ifstream& file, int* arr)
+void Level::createArrayFromFile(std::ifstream& file, TileType* arr)
 {
 	// Read file into string
 	std::string str;
@@ -57,27 +57,27 @@ void Level::createArrayFromFile(std::ifstream& file, int* arr)
 	// Convert string to int array
 	for (int i = 0; i < numTiles; i++)
 	{
-		int c;
+		TileType tileType;
 		switch (str.at(i))
 		{
 		case '0':
-			c = 0;
+			tileType = TileType::Empty;
 			break;
 		case '1':
-			c = 1;
+			tileType = TileType::Wall;
 			break;
 		case 'S':
-			c = 2;
+			tileType = TileType::Start;
 			break;
 		case 'F':
-			c = 3;
+			tileType = TileType::Finish;
 			break;
 
 		default:
-			c = -1;
+			tileType = TileType::Unknown;
 		}
 
-		arr[i] = c;
+		arr[i] = tileType;
 	}
 }
 
@@ -93,7 +93,7 @@ int Level::convertTileToIndex(Grid::Tile tile) const
 	return tile.y * tilesWide + tile.x;
 }
 
-int Level::intAtTile(const Grid::Tile& tile) const
+Level::TileType Level::typeOfTile(const Grid::Tile& tile) const
 {
 	int index = convertTileToIndex(tile);
 	return levelArray[index];
@@ -106,8 +106,8 @@ void Level::handleCollisionsX(Player& player, float dt) const
 
 	for (int i = player.top; i <= player.bottom; i++) // wall on left
 	{
-		int curInt = intAtTile({ player.left, i });
-		if (curInt == 1)
+		TileType tileType = typeOfTile({ player.left, i });
+		if (tileType == TileType::Wall)
 		{
 			player.setPosX(pos.x - vel.x * dt);
 			player.setVelX(0.0f);
@@ -116,8 +116,8 @@ void Level::handleCollisionsX(Player& player, float dt) const
 	}
 	for (int i = player.top; i <= player.bottom; i++) // wall on right
 	{
-		int curInt = intAtTile({ player.right, i });
-		if (curInt == 1)
+		TileType tileType = typeOfTile({ player.right, i });
+		if (tileType == TileType::Wall)
 		{
 			player.setPosX(pos.x - vel.x * dt);
 			player.setVelX(0.0f);
@@ -134,8 +134,8 @@ void Level::handleCollisionsY(Player& player, float dt) const
 
 	for (int i = player.left; i <= player.right; i++) // wall on top
 	{
-		int curInt = intAtTile({ i, player.top });
-		if (curInt == 1)
+		TileType tileType = typeOfTile({ i, player.top });
+		if (tileType == TileType::Wall)
 		{
 			player.setPosY(pos.y - vel.y * dt);
 			player.setVelY(0.0f);
@@ -144,8 +144,8 @@ void Level::handleCollisionsY(Player& player, float dt) const
 	}
 	for (int i = player.left; i <= player.right; i++) // wall on bottom
 	{
-		int curInt = intAtTile({ i, player.bottom });
-		if (curInt == 1)
+		TileType tileType = typeOfTile({ i, player.bottom });
+		if (tileType == TileType::Wall)
 		{
 			player.setPosY(pos.y - vel.y * dt);
 			player.setVelY(0.0f);
