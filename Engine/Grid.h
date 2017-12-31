@@ -13,7 +13,7 @@ public:
 	};
 
 public:
-	void DrawTile(Graphics& gfx, Grid::Tile tile, Color c) const
+	void DrawTile(Graphics& gfx, Tile tile, Color c) const
 	{
 		gfx.DrawRect(tile.x * tileWidth, tile.y * tileHeight, tileWidth, tileHeight, c);
 	}
