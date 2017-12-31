@@ -42,7 +42,7 @@ void Game::UpdateModel()
 {
 	const float dt = ft.Mark();
 	//const float dt = 1.0f / 60.0f; // FOR DEBUGGING ONLY
-	tibby.update(wnd.kbd, dt);
+	tibby.update(wnd.kbd, level, dt);
 }
 
 void Game::ComposeFrame()

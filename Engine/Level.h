@@ -6,6 +6,7 @@
 #include <assert.h>
 #include "Grid.h"
 #include "Vec2.h"
+#include "Player.h"
 
 class Level
 {
@@ -22,6 +23,10 @@ public:
 	Grid::Tile convertIndexToTile(int index) const;
 	int convertTileToIndex(Grid::Tile tile) const;
 	int intAtTile(const Grid::Tile& tile) const;
+
+	void handleCollisionsX(Player& player, float dt) const;
+	void handleCollisionsY(Player& player, float dt) const;
+	void clampToGrid(Player& player, float dt) const;
 
 	int getStartIndex() const;
 

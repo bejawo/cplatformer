@@ -1,13 +1,12 @@
 #include "Player.h"
+#include "Level.h"
 
 Player::Player(const Level& level)
-	:
-	level(level)
 {
 	vel.x = 0.0f;
 	vel.y = 0.0f;
 	
-	resetPosition();
+	resetPosition(level);
 }
 
 Vec2 Player::getPosFromLevelIndex(int index, int gridWidth, int gridHeight)
@@ -22,7 +21,7 @@ void Player::draw(Graphics& gfx) const
 	gfx.DrawRect((int)pos.x, (int)pos.y, width, height, color);
 }
 
-void Player::resetPosition()
+void Player::resetPosition(const Level& level)
 {
 	int startIndex = level.getStartIndex();
 	Grid::Tile startTile = level.convertIndexToTile(startIndex);
@@ -32,7 +31,7 @@ void Player::resetPosition()
 	updateGridPosY();
 }
 
-void Player::update(const Keyboard& kbd, float dt)
+void Player::update(const Keyboard& kbd, const Level& level, float dt)
 {
 	if (kbd.KeyIsPressed(ControlInput::moveLeft))
 	{
@@ -58,23 +57,23 @@ void Player::update(const Keyboard& kbd, float dt)
 
 	if (kbd.KeyIsPressed(ControlInput::resetPosition))
 	{
-		resetPosition();
+		resetPosition(level);
 	}
 
 	// x movement
 	pos.x += vel.x * dt;
 	updateGridPosX();
-	handleCollisionsX(dt);
+	level.handleCollisionsX(*this, dt);
 	updateGridPosX();
 
 	// y movement
 	vel.y += gravity * dt;
 	pos.y += vel.y * dt;
 	updateGridPosY();
-	handleCollisionsY(dt);
+	level.handleCollisionsY(*this, dt);
 	updateGridPosY();
 
-	clampToGrid(dt);
+	level.clampToGrid(*this, dt);
 }
 
 void Player::updateGridPosX()
@@ -93,75 +92,34 @@ void Player::updateGridPosY()
 	bottom = (int) (pos.y + height) / Grid::tileHeight;
 }
 
-void Player::handleCollisionsX(float dt)
-{
-	for (int i = top; i <= bottom; i++) // wall on left
-	{
-		int curInt = level.intAtTile({ left, i });
-		if (curInt == 1)
-		{
-			pos.x -= vel.x * dt;
-			vel.x = 0.0f;
-			return;
-		}
-	}
-	for (int i = top; i <= bottom; i++) // wall on right
-	{
-		int curInt = level.intAtTile({ right, i });
-		if (curInt == 1)
-		{
-			pos.x -= vel.x * dt;
-			vel.x = 0.0f;
-			return;
-		}
-	}
-	return;
-}
-
-void Player::handleCollisionsY(float dt)
-{
-	for (int i = left; i <= right; i++) // wall on top
-	{
-		int curInt = level.intAtTile({ i, top });
-		if (curInt == 1)
-		{
-			pos.y -= vel.y * dt;
-			vel.y = 0.0f;
-			return;
-		}
-	}
-	for (int i = left; i <= right; i++) // wall on bottom
-	{
-		int curInt = level.intAtTile({ i, bottom});
-		if (curInt == 1)
-		{
-			pos.y -= vel.y * dt;
-			vel.y = 0.0f;
-			isJumping = false;
-			return;
-		}
-	}
-	return;
-}
-
-void Player::clampToGrid(float dt)
-{
-	if (pos.x < 0 || pos.x + width > Level::width)
-	{
-		pos.x -= vel.x * dt;
-		vel.x = 0.0f;
-	}
-	if (pos.y < 0 || pos.y + height > Level::height - 15) // TODO: check collision detection - checking tiles too far down? (shouldn't need to offset height here)
-	{
-		pos.y -= vel.y * dt;
-		vel.y = 0.0f;
-		isJumping = false;
-	}
-}
-
 Vec2 Player::getPos() const
 {
 	return pos;
+}
+
+void Player::setPosX(float posX)
+{
+	pos.x = posX;
+}
+
+void Player::setPosY(float posY)
+{
+	pos.y = posY;
+}
+
+Vec2 Player::getVel() const
+{
+	return vel;
+}
+
+void Player::setVelX(float velX)
+{
+	vel.x = velX;
+}
+
+void Player::setVelY(float velY)
+{
+	vel.y = velY;
 }
 
 int Player::getWidth() const
@@ -172,4 +130,9 @@ int Player::getWidth() const
 int Player::getHeight() const
 {
 	return height;
+}
+
+void Player::setIsJumping(bool b)
+{
+	isJumping = b;
 }

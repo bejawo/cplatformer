@@ -93,11 +93,89 @@ int Level::convertTileToIndex(Grid::Tile tile) const
 	return tile.y * tilesWide + tile.x;
 }
 
-int Level::intAtTile(const Grid::Tile & tile) const
+int Level::intAtTile(const Grid::Tile& tile) const
 {
 	int index = convertTileToIndex(tile);
 	return levelArray[index];
 }
+
+void Level::handleCollisionsX(Player& player, float dt) const
+{
+	Vec2 pos = player.getPos();
+	Vec2 vel = player.getVel();
+
+	for (int i = player.top; i <= player.bottom; i++) // wall on left
+	{
+		int curInt = intAtTile({ player.left, i });
+		if (curInt == 1)
+		{
+			player.setPosX(pos.x - vel.x * dt);
+			player.setVelX(0.0f);
+			return;
+		}
+	}
+	for (int i = player.top; i <= player.bottom; i++) // wall on right
+	{
+		int curInt = intAtTile({ player.right, i });
+		if (curInt == 1)
+		{
+			player.setPosX(pos.x - vel.x * dt);
+			player.setVelX(0.0f);
+			return;
+		}
+	}
+	return;
+}
+
+void Level::handleCollisionsY(Player& player, float dt) const
+{
+	Vec2 pos = player.getPos();
+	Vec2 vel = player.getVel();
+
+	for (int i = player.left; i <= player.right; i++) // wall on top
+	{
+		int curInt = intAtTile({ i, player.top });
+		if (curInt == 1)
+		{
+			player.setPosY(pos.y - vel.y * dt);
+			player.setVelY(0.0f);
+			return;
+		}
+	}
+	for (int i = player.left; i <= player.right; i++) // wall on bottom
+	{
+		int curInt = intAtTile({ i, player.bottom });
+		if (curInt == 1)
+		{
+			player.setPosY(pos.y - vel.y * dt);
+			player.setVelY(0.0f);
+			player.setIsJumping(false);
+			return;
+		}
+	}
+	return;
+}
+
+void Level::clampToGrid(Player& player, float dt) const
+{
+	Vec2 pos = player.getPos();
+	Vec2 vel = player.getVel();
+
+	// Left and right
+	if (pos.x < 0 || pos.x + player.width > Level::width)
+	{
+		player.setPosX(pos.x - vel.x * dt);
+		player.setVelX(0.0f);
+	}
+	// Top and bottom
+	if (pos.y < 0 || pos.y + player.height > Level::height - 15) // TODO: check collision detection - checking tiles too far down? (shouldn't need to offset height here)
+	{
+		player.setPosY(pos.y - vel.y * dt);
+		player.setVelY(0.0f);
+		player.setIsJumping(false);
+	}
+}
+
 
 int Level::getStartIndex() const
 {
