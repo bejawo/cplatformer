@@ -19,19 +19,16 @@ public:
 	Level(const Grid& grid);
 	void draw(Graphics& gfx, const Grid& grid) const;
 	void createArrayFromFile(std::ifstream& file, int* arr);
-	int charToInt(char c) const;
 	Grid::Tile convertIndexToTile(int index) const;
 	int convertTileToIndex(Grid::Tile tile) const;
 	int intAtTile(const Grid::Tile& tile) const;
 
 	int getStartIndex() const;
-	std::string getLevelString() const;
 
 private:
 	static constexpr int tilesWide = 8;
 	static constexpr int tilesHigh = 8;
 	static constexpr int numTiles = tilesWide * tilesHigh;
-	std::string levelString;
 	int levelArray[numTiles];
 	std::ifstream levelFile;
 	int startIndex = 0;

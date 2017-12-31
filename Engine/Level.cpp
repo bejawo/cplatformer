@@ -57,25 +57,27 @@ void Level::createArrayFromFile(std::ifstream& file, int* arr)
 	// Convert string to int array
 	for (int i = 0; i < numTiles; i++)
 	{
-		arr[i] = charToInt(str.at(i));
-	}
-}
+		int c;
+		switch (str.at(i))
+		{
+		case '0':
+			c = 0;
+			break;
+		case '1':
+			c = 1;
+			break;
+		case 'S':
+			c = 2;
+			break;
+		case 'F':
+			c = 3;
+			break;
 
-int Level::charToInt(char c) const
-{
-	switch (c)
-	{
-	case '0':
-		return 0;
-	case '1':
-		return 1;
-	case 'S':
-		return 2;
-	case 'F':
-		return 3;
-	
-	default:
-		return -1;
+		default:
+			c = -1;
+		}
+
+		arr[i] = c;
 	}
 }
 
@@ -100,9 +102,4 @@ int Level::intAtTile(const Grid::Tile & tile) const
 int Level::getStartIndex() const
 {
 	return startIndex;
-}
-
-std::string Level::getLevelString() const
-{
-	return levelString;
 }
