@@ -18,7 +18,7 @@ class Level
 public:
 	Level(const Grid& grid);
 	void draw(Graphics& gfx, const Grid& grid) const;
-	void createArrayFromFile(std::ifstream& file);
+	void createArrayFromFile(std::ifstream& file, int* arr);
 	int charToInt(char c) const;
 	Grid::Tile convertIndexToTile(int index) const;
 	int convertTileToIndex(Grid::Tile tile) const;
@@ -32,8 +32,7 @@ private:
 	static constexpr int tilesHigh = 8;
 	static constexpr int numTiles = tilesWide * tilesHigh;
 	std::string levelString;
-	int* levelArray;
-	int la[numTiles];
+	int levelArray[numTiles];
 	std::ifstream levelFile;
 	int startIndex = 0;
 	const Grid& grid;

@@ -5,7 +5,7 @@ Level::Level(const Grid& grid)
 	grid(grid)
 {
 	levelFile.open("level.txt");
-	createArrayFromFile(levelFile);
+	createArrayFromFile(levelFile, levelArray);
 	int asdf = levelArray[63];
 
 	// Find index of start
@@ -24,7 +24,7 @@ void Level::draw(Graphics& gfx, const Grid& grid) const
 {
 	for (int i = 0; i < numTiles; i++)
 	{
-		const int curElem = levelArray[i]; // TODO: levelArray not here
+		const int curElem = levelArray[i];
 		const Grid::Tile tile = convertIndexToTile(i);
 
 		switch (curElem)
@@ -45,7 +45,7 @@ void Level::draw(Graphics& gfx, const Grid& grid) const
 	}
 }
 
-void Level::createArrayFromFile(std::ifstream& file)
+void Level::createArrayFromFile(std::ifstream& file, int* arr)
 {
 	// Read file into string
 	std::string str;
@@ -55,13 +55,10 @@ void Level::createArrayFromFile(std::ifstream& file)
 	assert((int) str.length() == numTiles);
 
 	// Convert string to int array
-	int arr[numTiles];
 	for (int i = 0; i < numTiles; i++)
 	{
 		arr[i] = charToInt(str.at(i));
 	}
-
-	levelArray = arr;
 }
 
 int Level::charToInt(char c) const

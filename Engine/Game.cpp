@@ -40,8 +40,8 @@ void Game::Go()
 
 void Game::UpdateModel()
 {
-	//const float dt = ft.Mark();
-	const float dt = 1 / 60;
+	const float dt = ft.Mark();
+	//const float dt = 1.0f / 60.0f; // FOR DEBUGGING ONLY
 	tibby.update(wnd.kbd, dt);
 }
 
