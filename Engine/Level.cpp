@@ -109,7 +109,7 @@ void Level::handleCollisionsX(Player& player, float dt) const
 		TileType tileType = typeOfTile({ player.left, i });
 		if (tileType == TileType::Wall)
 		{
-			player.setPosX(pos.x - vel.x * dt);
+			player.setPosX((float) (player.left + 1) * Grid::tileWidth); // Set position x to align player with wall
 			player.setVelX(0.0f);
 			return;
 		}
@@ -119,7 +119,7 @@ void Level::handleCollisionsX(Player& player, float dt) const
 		TileType tileType = typeOfTile({ player.right, i });
 		if (tileType == TileType::Wall)
 		{
-			player.setPosX(pos.x - vel.x * dt);
+			player.setPosX((float) player.right * Grid::tileWidth - player.width - 1);
 			player.setVelX(0.0f);
 			return;
 		}
@@ -135,9 +135,11 @@ void Level::handleCollisionsY(Player& player, float dt) const
 	for (int i = player.left; i <= player.right; i++) // wall on top
 	{
 		TileType tileType = typeOfTile({ i, player.top });
-		if (tileType == TileType::Wall)
+		/*if (tileType == TileType::None)
+			continue;
+		else */if (tileType == TileType::Wall)
 		{
-			player.setPosY(pos.y - vel.y * dt);
+			player.setPosY((float) (player.top + 1) * Grid::tileHeight);
 			player.setVelY(0.0f);
 			return;
 		}
@@ -147,7 +149,7 @@ void Level::handleCollisionsY(Player& player, float dt) const
 		TileType tileType = typeOfTile({ i, player.bottom });
 		if (tileType == TileType::Wall)
 		{
-			player.setPosY(pos.y - vel.y * dt);
+			player.setPosY((float) player.bottom * Grid::tileHeight - player.height - 1);
 			player.setVelY(0.0f);
 			player.setIsJumping(false);
 			return;
@@ -161,16 +163,28 @@ void Level::clampToGrid(Player& player, float dt) const
 	Vec2 pos = player.getPos();
 	Vec2 vel = player.getVel();
 
-	// Left and right
-	if (pos.x < 0 || pos.x + player.width > Level::width)
+	// Left
+	if (pos.x < 0)
 	{
-		player.setPosX(pos.x - vel.x * dt);
+		player.setPosX(0);
+		player.setVelX(0);
+	}
+	// Right
+	if (pos.x + player.width > Level::width)
+	{
+		player.setPosX(Level::width - player.width - 1);
 		player.setVelX(0.0f);
 	}
-	// Top and bottom
-	if (pos.y < 0 || pos.y + player.height > Level::height - 15) // TODO: check collision detection - checking tiles too far down? (shouldn't need to offset height here)
+	// Top
+	if (pos.y < 0)
 	{
-		player.setPosY(pos.y - vel.y * dt);
+		player.setPosY(0.0f);
+		player.setVelY(0.0f);
+	}
+	// Bottom
+	if (pos.y + player.height > Level::height) // TODO: fix
+	{
+		player.setPosX(Level::height - player.height - 1);
 		player.setVelY(0.0f);
 		player.setIsJumping(false);
 	}

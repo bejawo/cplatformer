@@ -25,8 +25,6 @@ public:
 	Vec2 getVel() const;
 	void setVelX(float velX);
 	void setVelY(float velY);
-	int getWidth() const;
-	int getHeight() const;
 	void setIsJumping(bool);
 
 private:

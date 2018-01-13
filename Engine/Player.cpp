@@ -122,16 +122,6 @@ void Player::setVelY(float velY)
 	vel.y = velY;
 }
 
-int Player::getWidth() const
-{
-	return width;
-}
-
-int Player::getHeight() const
-{
-	return height;
-}
-
 void Player::setIsJumping(bool b)
 {
 	isJumping = b;
