@@ -28,6 +28,7 @@
 #include "Vec2.h"
 #include "Player.h"
 #include "Keyboard.h"
+#include "FrameTimer.h"
 #include "Surface.h"
 
 class Game
@@ -40,15 +41,10 @@ public:
 private:
 	void ComposeFrame();
 	void UpdateModel();
-	/********************************/
-	/*  User Functions              */
-	/********************************/
 private:
 	MainWindow& wnd;
 	Graphics gfx;
-	/********************************/
-	/*  User Variables              */
-	/********************************/
+	FrameTimer ft;
 	Grid grid;
 	Level level;
 	Player tibby;

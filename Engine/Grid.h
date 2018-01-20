@@ -11,13 +11,14 @@ public:
 		int x;
 		int y;
 	};
-public:
-	Grid(Graphics& gfx);
-	void DrawCell(Grid::Tile tile, Color c);
-	Tile findTileFromPixel(int x, int y);
 
-private:
-	Graphics& gfx;
 public:
-	static constexpr int dimension = 60; // tile size in pixels
+	void DrawTile(Graphics& gfx, Tile tile, Color c) const
+	{
+		gfx.DrawRect(tile.x * tileWidth, tile.y * tileHeight, tileWidth, tileHeight, c);
+	}
+
+public:
+	static constexpr int tileHeight = 60;
+	static constexpr int tileWidth = 60;
 };

@@ -6,29 +6,44 @@
 #include <assert.h>
 #include "Grid.h"
 #include "Vec2.h"
+#include "Player.h"
 
 class Level
 {
 public:
-	Level(Grid& grid);
-	void drawLevel(Grid& grid);
-	int findStartIndex();
-	std::string getStringFromText(std::ifstream& file);
-	Grid::Tile getTileFromIndex(int index);
-	int getIndexFromTile(Grid::Tile);
-	char findCharAtIndex(int index);
+	enum class TileType
+	{
+		Unknown,
+		Empty,
+		Wall,
+		Start,
+		Finish
+	};
 
-	int getStartIndex();
-	std::string getLevelString();
+public:
+	Level(const Grid& grid);
+	void draw(Graphics& gfx, const Grid& grid) const;
+	void createArrayFromFile(std::ifstream& file, TileType* arr);
+	Grid::Tile convertIndexToTile(int index) const;
+	int convertTileToIndex(Grid::Tile tile) const;
+	TileType typeOfTile(const Grid::Tile& tile) const;
+	// Collisions
+	void handleCollisionsX(Player& player, float dt) const;
+	void handleCollisionsY(Player& player, float dt) const;
+	void clampToGrid(Player& player, float dt) const;
+
+	int getStartIndex() const;
+
 private:
-	static constexpr int dimWidth = 8;
-	static constexpr int dimHeight = 8;
-	static constexpr int numCells = dimWidth * dimHeight;
-	std::string levelString;
+	static constexpr int tilesWide = 8;
+	static constexpr int tilesHigh = 8;
+	static constexpr int numTiles = tilesWide * tilesHigh;
+	TileType levelArray[numTiles];
 	std::ifstream levelFile;
 	int startIndex;
-	Grid& grid;
+	const Grid& grid;
+
 public:
-	static constexpr int width = dimWidth * Grid::dimension;
-	static constexpr int height = dimHeight * Grid::dimension;
+	static constexpr int width = tilesWide * Grid::tileWidth; // Width in pixels
+	static constexpr int height = tilesHigh * Grid::tileHeight; // Height in pixels
 };

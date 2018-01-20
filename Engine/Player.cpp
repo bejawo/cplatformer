@@ -1,15 +1,14 @@
 #include "Player.h"
+#include "Level.h"
 
-Player::Player(Graphics& gfx, Level& level, Surface& s)
+Player::Player(const class Level& level, Surface& s)
 	:
-	gfx(gfx),
-	level(level),
 	playerSprite(s)
 {
 	vel.x = 0.0f;
 	vel.y = 0.0f;
 	
-	ResetPosition();
+	resetPosition(level);
 }
 
 Vec2 Player::getPosFromLevelIndex(int index, int gridWidth, int gridHeight)
@@ -19,29 +18,28 @@ Vec2 Player::getPosFromLevelIndex(int index, int gridWidth, int gridHeight)
 	return Vec2((float)x, (float)y);
 }
 
-void Player::drawPlayer()
+void Player::draw(Graphics& gfx) const
 {
 	gfx.DrawSprite((int)pos.x, (int)pos.y, playerSprite);
 }
 
-void Player::ResetPosition()
+void Player::resetPosition(const Level& level)
 {
-	int startIndex = level.getStartIndex(); // find start index in levelString
-	Grid::Tile startTile = level.getTileFromIndex(startIndex); // convert index to tile position
-	// position player in start tile
-	pos.x = float(startTile.x * Grid::dimension);
-	pos.y = float(startTile.y * Grid::dimension);
+	int startIndex = level.getStartIndex();
+	Grid::Tile startTile = level.convertIndexToTile(startIndex);
+	pos.x = float(startTile.x * Grid::tileWidth);
+	pos.y = float(startTile.y * Grid::tileHeight);
 	updateGridPosX();
 	updateGridPosY();
 }
 
-void Player::Update(Keyboard& kbd)
+void Player::update(const Keyboard& kbd, const Level& level, float dt)
 {
-	if (kbd.KeyIsPressed(VK_LEFT))
+	if (kbd.KeyIsPressed(ControlInput::moveLeft))
 	{
 		vel.x = -speed;
 	}
-	else if (kbd.KeyIsPressed(VK_RIGHT))
+	else if (kbd.KeyIsPressed(ControlInput::moveRight))
 	{
 		vel.x = speed;
 	}
@@ -50,133 +48,83 @@ void Player::Update(Keyboard& kbd)
 		vel.x = 0.0f;
 	}
 
-	if (kbd.KeyIsPressed(VK_UP))
+	if (kbd.KeyIsPressed(ControlInput::jump))
 	{
 		if (!isJumping && vel.y == 0) // Prevent jumping while falling (will need to change to enable jumping off a moving platform for example)
 		{
 			isJumping = true;
-			vel.y -= 12.0f;
+			vel.y = -jumpSpeed;
 		}
 	}
 
-	if (kbd.KeyIsPressed(82)) // R (ascii decimal value)
+	if (kbd.KeyIsPressed(ControlInput::resetPosition))
 	{
-		ResetPosition();
+		resetPosition(level);
 	}
 
 	// x movement
-	pos.x += vel.x;
+	pos.x += vel.x * dt;
 	updateGridPosX();
-	handleCollisionsX();
+	level.handleCollisionsX(*this, dt);
 	updateGridPosX();
 
 	// y movement
-	vel.y += gravity;
-	pos.y += vel.y;
+	vel.y += gravity * dt;
+	pos.y += vel.y * dt;
 	updateGridPosY();
-	handleCollisionsY();
+	level.handleCollisionsY(*this, dt);
 	updateGridPosY();
 
-	clampToGrid();
+	level.clampToGrid(*this, dt);
 }
 
 void Player::updateGridPosX()
 {
-	left = (int) pos.x / Grid::dimension;
-	right = (int) (pos.x + width) / Grid::dimension;
+	assert(pos.x >= -10);
+	assert(pos.x < Level::width + 10);
+	left = (int) pos.x / Grid::tileWidth;
+	right = (int) (pos.x + width) / Grid::tileWidth;
 }
 
 void Player::updateGridPosY()
 {
-	top = (int) pos.y / Grid::dimension;
-	bottom = (int) (pos.y + height) / Grid::dimension;
+	assert(pos.y >= -10);
+	assert(pos.y < Level::height + 10);
+	top = (int) pos.y / Grid::tileHeight;
+	bottom = (int) (pos.y + height) / Grid::tileHeight;
 }
 
-void Player::handleCollisionsX()
-{
-	for (int i = top; i <= bottom; i++) // wall on left
-	{
-		Grid::Tile curTile = { left, i };
-		int index = level.getIndexFromTile(curTile);
-		char curChar = level.findCharAtIndex(index);
-		if (curChar == '1')
-		{
-			pos.x -= vel.x;
-			vel.x = 0.0f;
-			return;
-		}
-	}
-	for (int i = top; i <= bottom; i++) // wall on right
-	{
-		Grid::Tile curTile = { right, i };
-		int index = level.getIndexFromTile(curTile);
-		char curChar = level.findCharAtIndex(index);
-		if (curChar == '1')
-		{
-			pos.x -= vel.x;
-			vel.x = 0.0f;
-			return;
-		}
-	}
-	return;
-}
-
-void Player::handleCollisionsY()
-{
-	for (int i = left; i <= right; i++) // wall on top
-	{
-		Grid::Tile curTile = { i, top };
-		int index = level.getIndexFromTile(curTile);
-		char curChar = level.findCharAtIndex(index);
-		if (curChar == '1')
-		{
-			pos.y -= vel.y;
-			vel.y = 0.0f;
-			return;
-		}
-	}
-	for (int i = left; i <= right; i++) // wall on bottom
-	{
-		Grid::Tile curTile = { i, bottom };
-		int index = level.getIndexFromTile(curTile);
-		char curChar = level.findCharAtIndex(index);
-		if (curChar == '1')
-		{
-			pos.y -= vel.y;
-			vel.y = 0.0f;
-			isJumping = false;
-			return;
-		}
-	}
-	return;
-}
-
-void Player::clampToGrid()
-{
-	if (pos.x < 0 || pos.x + width > Level::width)
-	{
-		pos.x -= vel.x;
-		vel.x = 0.0f;
-	}
-	if (pos.y < 0 || pos.y + height > Level::height - 15) // TODO: check collision detection - checking cells too far down? (shouldn't need to offset height here)
-	{
-		pos.y -= vel.y;
-		vel.y = 0.0f;
-		isJumping = false;
-	}
-}
-
-Vec2 Player::getPos()
+Vec2 Player::getPos() const
 {
 	return pos;
 }
 
-int Player::getWidth()
+void Player::setPosX(float posX)
 {
-	return width;
+	pos.x = posX;
 }
 
-int Player::getHeight()
+void Player::setPosY(float posY)
 {
-	return height;
+	pos.y = posY;
+}
+
+Vec2 Player::getVel() const
+{
+	return vel;
+}
+
+void Player::setVelX(float velX)
+{
+	vel.x = velX;
+}
+
+void Player::setVelY(float velY)
+{
+	vel.y = velY;
+}
+
+void Player::setIsJumping(bool b)
+{
+	isJumping = b;
 }
