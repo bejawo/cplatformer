@@ -48,5 +48,5 @@ private:
 	Grid grid;
 	Level level;
 	Player tibby;
-	Surface tibbySprite = Surface("../sprites/tibby.bmp");
+	Surface tibbySprite = Surface("../sprites/tibbyChroma.bmp");
 };
