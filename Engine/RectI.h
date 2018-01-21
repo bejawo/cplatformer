@@ -15,10 +15,10 @@ public:
 	int getWidth() const;
 	int getHeight() const;
 
-private:
-	const int top;
-	const int bottom;
-	const int left;
-	const int right;
+public:
+	int top;
+	int bottom;
+	int left;
+	int right;
 };
 
