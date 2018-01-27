@@ -8,6 +8,8 @@
 #include <cassert>
 #include "ControlInput.h"
 #include "Surface.h"
+#include <vector>
+#include "Animation.h"
 
 class Player
 {
@@ -38,9 +40,22 @@ private:
 	bool isJumping = false;
 
 	Surface& playerSprite;
+	std::vector<Animation> animations;
+
+	enum class Sequence
+	{
+		StandingLeft,
+		StandingRight,
+		WalkingLeft,
+		WalkingRight,
+		Count
+	};
+	Sequence iCurSequence;
+	bool dirLeft = true;
+
 public:
-	static constexpr int width = 20;
-	static constexpr int height = 40;
+	static constexpr int width = 32;
+	static constexpr int height = 48;
 	int top; // The row player's top edge is in
 	int bottom; // The row player's bottom edge is in
 	int left; // The column player's left edge is in

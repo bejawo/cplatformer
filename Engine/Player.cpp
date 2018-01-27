@@ -9,6 +9,11 @@ Player::Player(const class Level& level, Surface& s)
 	vel.y = 0.0f;
 	
 	resetPosition(level);
+
+	animations.emplace_back(Animation(0, 48, 32, 48, 1, s, 0.16)); // StandingLeft
+	animations.emplace_back(Animation(0, 96, 32, 48, 1, s, 0.16)); // StandingRight
+	animations.emplace_back(Animation(0, 48, 32, 48, 4, s, 0.16)); // WalkingLeft
+	animations.emplace_back(Animation(0, 96, 32, 48, 4, s, 0.16)); // WalkingRight
 }
 
 Vec2 Player::getPosFromLevelIndex(int index, int gridWidth, int gridHeight)
@@ -20,7 +25,7 @@ Vec2 Player::getPosFromLevelIndex(int index, int gridWidth, int gridHeight)
 
 void Player::draw(Graphics& gfx) const
 {
-	gfx.DrawSprite((int)pos.x, (int)pos.y, playerSprite);
+	animations[(int)iCurSequence].draw((Vei2)pos, gfx);
 }
 
 void Player::resetPosition(const Level& level)
@@ -76,6 +81,27 @@ void Player::update(const Keyboard& kbd, const Level& level, float dt)
 	updateGridPosY();
 
 	level.clampToGrid(*this, dt);
+
+	// Animations
+	if (vel.x > 0)
+	{
+		iCurSequence = Sequence::WalkingRight;
+		dirLeft = false;
+	}
+	else if (vel.x < 0)
+	{
+		iCurSequence = Sequence::WalkingLeft;
+		dirLeft = true;
+	}
+	else
+	{
+		if (dirLeft)
+			iCurSequence = Sequence::StandingLeft;
+		else
+			iCurSequence = Sequence::StandingRight;
+	}
+
+	animations[(int)iCurSequence].update(dt);
 }
 
 void Player::updateGridPosX()

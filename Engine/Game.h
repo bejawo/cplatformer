@@ -30,6 +30,7 @@
 #include "Keyboard.h"
 #include "FrameTimer.h"
 #include "Surface.h"
+#include "Animation.h"
 
 class Game
 {
@@ -48,5 +49,5 @@ private:
 	Grid grid;
 	Level level;
 	Player tibby;
-	Surface tibbySprite = Surface("../sprites/tibbyChroma.bmp");
+	Surface tibbySprite = Surface("../sprites/marle32x48.bmp");
 };
